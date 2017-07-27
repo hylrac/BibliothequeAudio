@@ -131,7 +131,7 @@ public class ChansonDAO {
 
 	public void changementOrdreChanson(int id, int ordre) {
 		try {
-			String sql3 = "SELECT disque_id FROM chansons WHERE id = ? ";
+			String sql3 = "SELECT * FROM chansons WHERE id = ? ";
 			PreparedStatement statement3 = connection.prepareStatement(sql3);
 			statement3.setInt(1, id);
 			ResultSet resultSet = statement3.executeQuery();
@@ -139,10 +139,25 @@ public class ChansonDAO {
 			if (resultSet.next()) {
 				disqueId = resultSet.getString("disque_id");
 			} 
+			
 			updateOrdreChansonsByDiscId(disqueId);
+			
+			String sql4 = "SELECT * FROM chansons WHERE id = ? ";
+			PreparedStatement statement4 = connection.prepareStatement(sql4);
+			statement4.setInt(1, id);
+			ResultSet resultSet2 = statement4.executeQuery();
+			int ancienOrdre = 150000;
+			if (resultSet2.next()) {
+				ancienOrdre = resultSet.getInt("ordre");
+			}
+			
 			String sql2 = "UPDATE `chansons` SET ordre = ?  WHERE id= ? AND disque_id = ? ";
 			PreparedStatement statement2 = connection.prepareStatement(sql2);
-			statement2.setFloat(1, (float) (ordre - 0.5));
+			if (ordre<ancienOrdre) {
+				statement2.setFloat(1, (float) (ordre - 0.5));
+			} else {
+				statement2.setFloat(1, (float) (ordre + 0.5));
+			}
 			statement2.setInt(2, id);
 			statement2.setString(3, disqueId);
 			statement2.executeUpdate();
