@@ -1,27 +1,56 @@
 package fr.lteconsulting.modele;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import fr.lteconsulting.dao.ChansonDAO;
+import fr.lteconsulting.dao.DisqueDAO;
 
 public class Bibliotheque
 {
-	private Map<String, Disque> disques = new HashMap<>();
+
+	DisqueDAO dao = new DisqueDAO();
+	ChansonDAO cdao = new ChansonDAO();
 
 	public void ajouterDisque( Disque disque )
 	{
-		disques.put( disque.getCodeBarre(), disque );
+		dao.add(disque);
+		for (Chanson chanson : disque.getChansons()) {
+			cdao.add(chanson, disque.getCodeBarre());
+		}
+		
 	}
 
 	public List<Disque> getDisques()
 	{
-		return new ArrayList<>( disques.values() );
+		return dao.findAll(cdao);
+	}
+	
+	public void update(Disque disque) {
+		dao.update(disque);
+		for (Chanson chanson : disque.getChansons()) {
+			cdao.add(chanson, disque.getCodeBarre());
+		}
+		
+	}
+	
+	public void updateChanson(Chanson chanson) {
+		cdao.update(chanson);
+		
+	}
+	
+	public void delete( String disqueId ) {
+		cdao.deleteByDiscId(disqueId);
+		dao.delete(disqueId);
+	}
+	
+	public void deleteChanson( int id ) {
+		cdao.delete(id);
 	}
 
 	public Disque rechercherDisqueParCodeBarre( String codeBarre )
 	{
-		return disques.get( codeBarre );
+		return dao.findById(codeBarre);
 	}
 
 	public List<Disque> rechercherDisqueParNom( String recherche )
@@ -30,7 +59,7 @@ public class Bibliotheque
 
 		List<Disque> resultat = new ArrayList<>();
 
-		for( Disque disque : disques.values() )
+		for( Disque disque : dao.findAll(cdao) )
 		{
 			if( disque.getNom().toLowerCase().contains( recherche ) )
 				resultat.add( disque );
@@ -43,7 +72,7 @@ public class Bibliotheque
 	{
 		List<Disque> resultat = new ArrayList<>();
 
-		for( Disque disque : disques.values() )
+		for( Disque disque : dao.findAll(cdao) )
 		{
 			boolean estValide = true;
 			for( String terme : termes )
@@ -64,8 +93,9 @@ public class Bibliotheque
 
 	public void afficher()
 	{
+		List<Disque> disques = this.getDisques();
 		System.out.println( "BIBLIOTHEQUE avec " + disques.size() + " disques" );
-		for( Disque disque : disques.values() )
+		for( Disque disque : disques )
 			disque.afficher();
 	}
 }

@@ -20,7 +20,7 @@ public class AffichageDisquesParCodeBarre implements Commande
 	@Override
 	public String getNom()
 	{
-		return "Affichage des disques par code barre";
+		return "Afficher les disques par code barre";
 	}
 
 	@Override

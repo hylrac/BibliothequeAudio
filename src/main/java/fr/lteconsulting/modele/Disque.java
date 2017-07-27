@@ -70,4 +70,8 @@ public class Disque
 				chanson.afficher();
 		}
 	}
+
+	public List<Chanson> getChansons() {
+		return chansons;
+	}
 }

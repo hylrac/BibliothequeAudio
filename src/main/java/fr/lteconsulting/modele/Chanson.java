@@ -4,13 +4,28 @@ public class Chanson
 {
 	private String nom;
 	private int dureeEnSecondes;
+	private int id;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public Chanson()
 	{
 	}
 
-	public Chanson( String nom, int dureeEnSecondes )
+	public Chanson( String nom, int dureeEnSecondes, int id )
 	{
+		this.nom = nom;
+		this.dureeEnSecondes = dureeEnSecondes;
+		this.id = id;
+	}
+
+	public Chanson(String nom, int dureeEnSecondes) {
 		this.nom = nom;
 		this.dureeEnSecondes = dureeEnSecondes;
 	}
@@ -37,6 +52,6 @@ public class Chanson
 
 	public void afficher()
 	{
-		System.out.println( nom + " (" + dureeEnSecondes + " sec.)" );
+		System.out.println( "	["+ id +"] "+ nom + " (" + dureeEnSecondes + " sec.)" );
 	}
 }

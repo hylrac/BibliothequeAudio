@@ -11,7 +11,7 @@ public class Menu
 
 	public void ajouterCommande( Commande commande )
 	{
-		commandes.add( commande );
+		getCommandes().add( commande );
 	}
 
 	public Commande saisirCommmande()
@@ -20,9 +20,9 @@ public class Menu
 		// afficher un menu,
 		System.out.println();
 		System.out.println( "MENU" );
-		for( int i = 0; i < commandes.size(); i++ )
+		for( int i = 0; i < getCommandes().size(); i++ )
 		{
-			Commande commande = commandes.get( i );
+			Commande commande = getCommandes().get( i );
 
 			System.out.println( "- " + (i + 1) + ". " + commande.getNom() );
 		}
@@ -31,8 +31,16 @@ public class Menu
 		// TODO g�rer les erreurs de l'utilisateur
 		int choix = Saisie.saisieInt( "Faites votre choix" );
 
-		Commande commandeChoisie = commandes.get( choix - 1 );
+		Commande commandeChoisie = getCommandes().get( choix - 1 );
 
 		return commandeChoisie;
+	}
+
+	public List<Commande> getCommandes() {
+		return commandes;
+	}
+
+	public void setCommandes(List<Commande> commandes) {
+		this.commandes = commandes;
 	}
 }

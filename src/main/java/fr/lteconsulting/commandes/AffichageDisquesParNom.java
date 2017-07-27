@@ -30,6 +30,6 @@ public class AffichageDisquesParNom implements Commande
 		Collections.sort( disques, new ComparateurDisqueParNom() );
 
 		for( Disque disque : disques )
-			disque.afficher( false );
+			disque.afficher( true );
 	}
 }

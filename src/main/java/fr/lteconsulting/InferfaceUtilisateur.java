@@ -1,4 +1,4 @@
-package fr.lteconsulting;
+ package fr.lteconsulting;
 
 import fr.lteconsulting.commandes.AffichageDisquesParCodeBarre;
 import fr.lteconsulting.commandes.AffichageDisquesParNom;
@@ -6,6 +6,10 @@ import fr.lteconsulting.commandes.AjouterDisque;
 import fr.lteconsulting.commandes.GenerationDisques;
 import fr.lteconsulting.commandes.RechercheParCodeBarre;
 import fr.lteconsulting.commandes.RechercheParNom;
+import fr.lteconsulting.commandes.SupprimerChansonParId;
+import fr.lteconsulting.commandes.SupprimerDisque;
+import fr.lteconsulting.commandes.UpdateChansonParId;
+import fr.lteconsulting.commandes.UpdateDisque;
 import fr.lteconsulting.modele.Bibliotheque;
 
 public class InferfaceUtilisateur
@@ -20,6 +24,10 @@ public class InferfaceUtilisateur
 		menu.ajouterCommande( new RechercheParCodeBarre( bibliotheque ) );
 		menu.ajouterCommande( new AffichageDisquesParNom( bibliotheque ) );
 		menu.ajouterCommande( new AffichageDisquesParCodeBarre( bibliotheque ) );
+		menu.ajouterCommande(new UpdateDisque(bibliotheque));
+		menu.ajouterCommande(new UpdateChansonParId(bibliotheque));
+		menu.ajouterCommande(new SupprimerDisque(bibliotheque));
+		menu.ajouterCommande(new SupprimerChansonParId(bibliotheque));
 	}
 
 	public void execute()
