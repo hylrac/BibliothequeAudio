@@ -39,6 +39,10 @@ public class Bibliotheque
 		
 	}
 	
+	public void changementOrdreChanson (int id, int ordre) {
+		cdao.changementOrdreChanson(id, ordre);
+	}
+	
 	public void delete( String disqueId ) {
 		cdao.deleteByDiscId(disqueId);
 		dao.delete(disqueId);

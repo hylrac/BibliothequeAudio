@@ -27,7 +27,7 @@ public class ChansonDAO {
 
 	public List<Chanson> findByDiscId(String id) {
 		try {
-			String sql = "SELECT * FROM chansons WHERE disque_id = ?";
+			String sql = "SELECT * FROM chansons WHERE disque_id = ? ORDER BY ordre";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, id);
 			ResultSet resultSet = statement.executeQuery();
@@ -41,7 +41,7 @@ public class ChansonDAO {
 				chansons.add(chanson);
 
 			}
-			
+
 			return chansons;
 		} catch (SQLException e) {
 			throw new RuntimeException("Impossible de réaliser l(es) opération(s)", e);
@@ -50,19 +50,20 @@ public class ChansonDAO {
 
 	public Chanson add(Chanson chanson, String disqueId) {
 		try {
-			String sql = "INSERT INTO `chansons` (disque_id, nom, duree) VALUES ( ? , ? , ? )";
+			String sql = "INSERT INTO `chansons` (disque_id, nom, duree, ordre) VALUES ( ? , ? , ? , 50)";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, disqueId);
 			statement.setString(2, chanson.getNom());
 			statement.setInt(3, chanson.getDureeEnSecondes());
 			statement.executeUpdate();
+			updateOrdreChansonsByDiscId(disqueId);
 
 		} catch (SQLException e) {
 			throw new RuntimeException("Impossible de réaliser l(es) opération(s)", e);
 		}
 		return chanson;
 	}
-	
+
 	public void update(Chanson chanson) {
 		try {
 			String sql = "UPDATE `chansons` SET nom= ?, duree = ?  WHERE id= ? ";
@@ -71,39 +72,84 @@ public class ChansonDAO {
 			statement.setInt(2, chanson.getDureeEnSecondes());
 			statement.setInt(3, chanson.getId());
 			statement.executeUpdate();
-			
+
 		} catch (SQLException e) {
 			throw new RuntimeException("Impossible de réaliser l(es) opération(s)", e);
 		}
 	}
-	
+
 	public void delete(int id) {
 		try {
 			String sql = "DELETE FROM `chansons` WHERE id = ?";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, id);
 			statement.executeUpdate();
-			
-				
-			
+
 		} catch (SQLException e) {
 			throw new RuntimeException("Impossible de réaliser l(es) opération(s)", e);
 		}
-		
+
 	}
-	
+
 	public void deleteByDiscId(String disqueId) {
 		try {
 			String sql = "DELETE FROM `chansons` WHERE disque_id = ?";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, disqueId);
 			statement.executeUpdate();
-			
-				
+
+		} catch (SQLException e) {
+			throw new RuntimeException("Impossible de réaliser l(es) opération(s)", e);
+		}
+
+	}
+
+	public void updateOrdreChansonsByDiscId(String disqueId) {
+		try {
+			String sql = "SELECT * FROM `chansons` WHERE disque_id = ? ORDER BY ordre";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setString(1, disqueId);
+			ResultSet resultSet = statement.executeQuery();
+			List<Integer> listId = new ArrayList<>();
+			while (resultSet.next()) {
+				listId.add(resultSet.getInt("id"));
+			}
+			int i = 1;
+			for (Integer id : listId) {
+				String sql2 = "UPDATE `chansons` SET ordre = ?  WHERE id= ? ";
+				PreparedStatement statement2 = connection.prepareStatement(sql2);
+				statement2.setInt(1, i);
+				statement2.setInt(2, id);
+				statement2.executeUpdate();
+				i++;
+			}
+
+		} catch (SQLException e) {
+			throw new RuntimeException("Impossible de réaliser l(es) opération(s)", e);
+		}
+	}
+
+	public void changementOrdreChanson(int id, int ordre) {
+		try {
+			String sql3 = "SELECT disque_id FROM chansons WHERE id = ? ";
+			PreparedStatement statement3 = connection.prepareStatement(sql3);
+			statement3.setInt(1, id);
+			ResultSet resultSet = statement3.executeQuery();
+			String disqueId="";
+			if (resultSet.next()) {
+				disqueId = resultSet.getString("disque_id");
+			} 
+			updateOrdreChansonsByDiscId(disqueId);
+			String sql2 = "UPDATE `chansons` SET ordre = ?  WHERE id= ? AND disque_id = ? ";
+			PreparedStatement statement2 = connection.prepareStatement(sql2);
+			statement2.setFloat(1, (float) (ordre - 0.5));
+			statement2.setInt(2, id);
+			statement2.setString(3, disqueId);
+			statement2.executeUpdate();
+			updateOrdreChansonsByDiscId(disqueId);
 			
 		} catch (SQLException e) {
 			throw new RuntimeException("Impossible de réaliser l(es) opération(s)", e);
 		}
-		
 	}
 }
